@@ -1,0 +1,44 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: #f4f6f9;
+    padding: 20px;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 500px;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #4facfe, #3a8dde);
+    color: white;
+    padding: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    border-color: #4facfe;
+}
+
+.card-footer {
+    background: #fff;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}

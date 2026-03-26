@@ -1,0 +1,82 @@
+<h1>Tickets</h1>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Id</th>
+                <th>Folio</th>
+                <th>Fecha creación</th>
+                <th>Fecha pago</th>
+                <th>Total</th>
+                <th>Estatus</th>
+                <th>Pagos</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (ticket of tickets; track ticket.idTicket) {
+            <tr>
+                <td class="actions">
+                    <!-- Ver detalle -->
+                    <a class="btn btn-warning" title="Ver ticket" (click)="verDetalle(ticket.idTicket!)">
+                        <i class="bi bi-ticket-detailed"></i>
+                    </a>
+                    <!-- Eliminar -->
+                    <a (click)="eliminarTicket(ticket.idTicket!)" class="btn btn-danger" title="Eliminar ticket">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </td>
+                <td>{{ ticket.idTicket }}</td>
+                <td>{{ ticket.folio }}</td>
+                <td>{{ ticket.fechaCreacion | date:'medium' }}</td>
+                <td>{{ ticket.fechaPago | date:'medium' }}</td>
+                <td>{{ ticket.total | currency }}</td>
+                <td>
+                    <span class="status" [class]="ticket.estatus.toLowerCase()">
+                        {{ ticket.estatus }}
+                    </span>
+                </td>
+                <td>
+                    <a (click)="verPagos(ticket.idTicket!)" class="btn btn-success">Pagos</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <!-- Modal Bootstrap Detalle -->
+    <div class="modal fade" id="detalleTicketModal" tabindex="-1" aria-labelledby="detalleTicketModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleTicketModalLabel">Pagos del Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí mostramos los detalles con nuestro componente hijo -->
+                    <app-detalle-ticket [idTicket]="ticketSeleccionadoId"></app-detalle-ticket>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Bootstrap Pagos -->
+    <div class="modal fade" id="pagosTicketModal" tabindex="-1" aria-labelledby="detalleTpagoicketModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleTicketModalLabel">Detalle del Ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí mostramos los detalles con nuestro componente hijo -->
+                    <app-pagos [idTicket]="ticketSeleccionadoId"></app-pagos>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

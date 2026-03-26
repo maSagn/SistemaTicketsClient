@@ -1,0 +1,45 @@
+<!-- Spinner mientras carga -->
+<div *ngIf="cargando" class="text-center my-3">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
+
+<!-- Mensaje de error -->
+<div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+</div>
+
+<!-- Tabla de pagos -->
+<table *ngIf="!cargando && pagosTicket.length > 0" class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Numero pago</th>
+            <th>Folio</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let pago of pagosTicket; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ pago.numeroPago }}</td>
+            <td>{{ pago.folio }}</td>
+            <td>{{ pago.monto | currency }}</td>
+            <td>{{ pago.fechaCreacion | date:'medium' }}</td>
+        </tr>
+    </tbody>
+</table>
+<!-- Boton para abonar -->
+<div *ngIf="!cargando && totalPendiente > 0" class="text-end my-2">
+    <button class="btn btn-primary" (click)="realizarPago()">
+        Realizar abono
+    </button>
+</div>
+
+
+<!-- Mensaje si no hay detalles -->
+<div *ngIf="!cargando && pagosTicket.length === 0" class="text-center text-muted my-3">
+    No hay detalles para este ticket.
+</div>

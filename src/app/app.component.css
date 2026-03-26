@@ -1,0 +1,133 @@
+/* ===== LAYOUT ===== */
+.layout {
+    display: flex;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    color: white;
+    transition: width 0.3s ease;
+    padding-top: 20px;
+    z-index: 1000;
+}
+
+/* COLAPSADO */
+.sidebar.collapsed {
+    width: 70px;
+}
+
+/* ===== TOGGLE ===== */
+.toggle-btn {
+    text-align: center;
+    font-size: 22px;
+    cursor: pointer;
+    margin-bottom: 25px;
+    color: #cbd5f5;
+}
+
+.toggle-btn:hover {
+    color: white;
+}
+
+/* ===== MENU ===== */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ITEM */
+.menu li {
+    margin-bottom: 8px;
+}
+
+/* LINK */
+.menu a {
+    display: flex;
+    align-items: center;
+    height: 48px;                 /* 👈 altura fija */
+    padding: 0 16px;
+    text-decoration: none;
+    color: #cbd5f5;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+.menu a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* ICON WRAPPER (CLAVE) */
+.icon {
+    width: 40px;                 /* 👈 espacio fijo SIEMPRE */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ICON */
+.icon i {
+    font-size: 18px;
+}
+
+/* TEXTO */
+.text {
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+/* ===== COLAPSADO ===== */
+.sidebar.collapsed .text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+/* IMPORTANTE: NO CAMBIAR PADDING NI JUSTIFY */
+.sidebar.collapsed .menu a {
+    padding: 0 16px;  /* 👈 igual que normal */
+}
+
+/* ===== CONTENT ===== */
+.content {
+    margin-left: 220px;
+    padding: 20px;
+    width: 100%;
+    min-height: 100vh;
+    background: #f1f5f9;
+    transition: margin-left 0.3s ease;
+}
+
+/* COLAPSADO */
+.content.expanded {
+    margin-left: 70px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(0);
+        width: 220px;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .content.expanded {
+        margin-left: 0;
+    }
+}

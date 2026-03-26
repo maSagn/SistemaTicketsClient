@@ -1,0 +1,29 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { PagosTicketDTO } from '../Interface/PagosTicketDTO';
+import { Result } from '../Interface/Result';
+import { TicketDTO } from '../Interface/TicketDTO';
+import { TicketPagoDTO } from '../Interface/TicketPagoDTO';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PagosTicketService {
+
+  private url = "http://localhost:8081/api/pago";
+
+  constructor(private http: HttpClient) { }
+
+  getPagosByTicket(idTicket: number): Observable<PagosTicketDTO[]> {
+    return this.http.get<Result<PagosTicketDTO[]>>(`${this.url}/pagos/${idTicket}`).pipe(
+      map(response => response.object)
+    );
+  }
+
+  registrarPago(ticketPago: TicketPagoDTO): Observable<TicketDTO> {
+    return this.http.post<Result<TicketDTO>>(this.url, ticketPago).pipe(
+      map(response => response.object)
+    )
+  }
+}

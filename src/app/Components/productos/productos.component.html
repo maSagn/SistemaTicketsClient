@@ -1,0 +1,96 @@
+<!-- HEADER -->
+<div class="page-header">
+
+    <h1>Catálogo de productos</h1>
+
+    <div class="header-actions">
+
+        <a [routerLink]="['/producto']" class="btn-add">
+            <i class="bi bi-plus-circle"></i>
+            Agregar producto
+        </a>
+
+        <div class="cart" (click)="toggleCarrito()" style="position: relative; cursor: pointer;">
+            <i class="bi bi-cart"></i>
+            <span class="cart-count">
+                {{ totalItems$ | async }}
+            </span>
+
+            <!-- Menu desplegable -->
+            <div *ngIf="mostrarCarrito" class="carrito-dropdown">
+                <ng-container *ngIf="carrito$ | async as items; else vacio">
+                    <div *ngFor="let item of items" class="carrito-item">
+                        <span>{{ item.producto.nombre }}</span>
+                        <span>x {{ item.cantidad }}</span>
+                        <span>{{ item.producto.precioUnitario * item.cantidad | currency }}</span>
+                        <button (click)="eliminarDelCarrito(item.producto.idProducto!)">❌</button>
+                    </div>
+                    <hr>
+                    <div class="carrito-total">
+                        Total: {{ total$ | async | currency }}
+                    </div>
+                    <button (click)="vaciarCarrito()">Vaciar carrito</button>
+                    <button (click)="registrarVenta()" [disabled]="(totalItems$ | async) === 0"
+                        class="btn btn-success">
+                        Pagar
+                    </button>
+                </ng-container>
+
+                <ng-template #vacio>
+                    <div>Tu carrito está vacío</div>
+                </ng-template>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- GRID -->
+<div class="container">
+
+    @for (producto of productos; track producto.idProducto) {
+    <div class="card">
+
+        <!-- HEADER CARD -->
+        <div class="card-header">
+            <span class="badge">#{{ producto.idProducto }}</span>
+
+            <div class="actions">
+                <a [routerLink]="['/producto', producto.idProducto]" class="icon-btn edit">
+                    <i class="bi bi-pen"></i>
+                </a>
+                <a (click)="eliminar(producto.idProducto!)" class="icon-btn delete">
+                    <i class="bi bi-trash3"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body">
+            <h3 class="title">{{ producto.nombre }}</h3>
+
+            <p class="description">
+                {{ producto.descripcion }}
+            </p>
+
+            <div class="price">
+                $ {{ producto.precioUnitario }}
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer">
+            <button (click)="agregarAlCarrito(producto)" class="btn-primary">
+                <i class="bi bi-cart-plus"></i>
+                Agregar
+            </button>
+        </div>
+
+    </div>
+    }
+
+</div>
