@@ -24,6 +24,10 @@ export class PagosTicketService {
   registrarPago(ticketPago: TicketPagoDTO): Observable<TicketDTO> {
     return this.http.post<Result<TicketDTO>>(this.url, ticketPago).pipe(
       map(response => response.object)
-    )
+    );
+  }
+
+  deletePagosByTicket(idTicket: number): Observable<void> {
+    return this.http.delete<void>(`${this.url}/eliminarPagosTicket/${idTicket}`);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { PagosTicketDTO } from '../../Interface/PagosTicketDTO';
 import { PagosTicketService } from '../../Service/pagos-ticket.service';
 import { TicketPagoDTO } from '../../Interface/TicketPagoDTO';
@@ -21,6 +21,7 @@ export class PagosComponent {
   cargando: boolean = false;
   error: string = '';
   totalPendiente: number = 0;
+  @Output() ticketLiquidado = new EventEmitter<void>();
 
   constructor(
     private pagosTicketService: PagosTicketService,
@@ -135,82 +136,85 @@ export class PagosComponent {
 
 
   realizarPago() {
-  // Cerrar modal de Bootstrap si está abierto
-  const modalPagosEl = document.getElementById("pagosTicketModal");
-  let bootstrapModal: any;
-  if (modalPagosEl) {
-    bootstrapModal = bootstrap.Modal.getInstance(modalPagosEl);
-    if (bootstrapModal) bootstrapModal.hide();
-  }
+    // Cerrar modal de Bootstrap si está abierto
+    const modalPagosEl = document.getElementById("pagosTicketModal");
+    let bootstrapModal: any;
+    if (modalPagosEl) {
+      bootstrapModal = bootstrap.Modal.getInstance(modalPagosEl);
+      if (bootstrapModal) bootstrapModal.hide();
+    }
 
-  // Abrir SweetAlert
-  Swal.fire({
-    title: 'Realizar abono',
-    text: `Total pendiente: $${this.totalPendiente.toFixed(2)}`,
-    input: 'number',
-    inputAttributes: {
-      min: '0',
-      step: 'any'
-    },
-    showCancelButton: true,
-    confirmButtonText: 'Pagar',
-    cancelButtonText: 'Cancelar',
-    preConfirm: (value: string | null) => {
-      const abono = parseFloat(value as string);
-      // Validacion para que no se ingresen valores invalidos
-      if (isNaN(abono) || abono <= 0 || abono > this.totalPendiente) {
-        Swal.showValidationMessage(`Ingresa un monto válido (1 - ${this.totalPendiente})`);
+    // Abrir SweetAlert
+    Swal.fire({
+      title: 'Realizar abono',
+      text: `Total pendiente: $${this.totalPendiente.toFixed(2)}`,
+      input: 'number',
+      inputAttributes: {
+        min: '0',
+        step: 'any'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Pagar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: (value: string | null) => {
+        const abono = parseFloat(value as string);
+        // Validacion para que no se ingresen valores invalidos
+        if (isNaN(abono) || abono <= 0 || abono > this.totalPendiente) {
+          Swal.showValidationMessage(`Ingresa un monto válido (1 - ${this.totalPendiente})`);
+        }
+        return abono;
       }
-      return abono;
-    }
-  }).then((result: any) => {
-    if (result.isConfirmed && result.value) {
-      const abono = result.value as number;
+    }).then((result: any) => {
+      if (result.isConfirmed && result.value) {
+        const abono = result.value as number;
 
-      const ticketPago: TicketPagoDTO = {
-        idTicket: this.idTicket,
-        Pagosticket: [
-          {
-            numeroPago: this.pagosTicket.length + 1,
-            folio: Math.floor(100000000 + Math.random() * 900000000),
-            monto: abono,
-            fechaCreacion: new Date().toISOString()
+        const ticketPago: TicketPagoDTO = {
+          idTicket: this.idTicket,
+          Pagosticket: [
+            {
+              numeroPago: this.pagosTicket.length + 1,
+              folio: Math.floor(100000000 + Math.random() * 900000000),
+              monto: abono,
+              fechaCreacion: new Date().toISOString()
+            }
+          ]
+        };
+
+        this.pagosTicketService.registrarPago(ticketPago).subscribe({
+          next: () => {
+            // Revisar si ya se liquidó el ticket
+            const totalPagado = this.pagosTicket.reduce((acc, p) => acc + p.monto, 0) + abono;
+            const totalTicket = this.pagosTicket[0]?.Ticket?.total || 0;
+            const nuevoEstatus = totalPagado >= totalTicket ? 'PAGADO' : 'PENDIENTE';
+
+            const ticketUpdate: TicketEstatusDTO = {
+              estatus: nuevoEstatus
+            };
+
+            // Actualizar estatus del ticket en la BD
+            this.ticketService.actualizarEstatusTicket(this.idTicket, ticketUpdate).subscribe({
+              next: () => {
+                Swal.fire("¡Abono registrado!", `Se registró un abono de $${abono}`, "success");
+                this.cargarPagosTicket(this.idTicket);
+                if (nuevoEstatus === 'PAGADO') {
+                  this.ticketLiquidado.emit();
+                }
+                if (modalPagosEl && bootstrapModal) bootstrapModal.show();
+              },
+              error: () => {
+                Swal.fire("Error", "No se pudo actualizar el estado del ticket", "error");
+                if (modalPagosEl && bootstrapModal) bootstrapModal.show();
+              }
+            });
+          },
+          error: () => {
+            Swal.fire("Error", "No se pudo registrar el abono", "error");
           }
-        ]
-      };
-
-      this.pagosTicketService.registrarPago(ticketPago).subscribe({
-        next: () => {
-    // Revisar si ya se liquidó el ticket
-    const totalPagado = this.pagosTicket.reduce((acc, p) => acc + p.monto, 0) + abono;
-    const totalTicket = this.pagosTicket[0]?.Ticket?.total || 0;
-    const nuevoEstatus = totalPagado >= totalTicket ? 'PAGADO' : 'PENDIENTE';
-
-    const ticketUpdate: TicketEstatusDTO = {
-            estatus: nuevoEstatus
-          };
-
-    // Actualizar estatus del ticket en la BD
-    this.ticketService.actualizarEstatusTicket(this.idTicket, ticketUpdate).subscribe({
-  next: () => {
-    Swal.fire("¡Abono registrado!", `Se registró un abono de $${abono}`, "success");
-    this.cargarPagosTicket(this.idTicket);
-    if (modalPagosEl && bootstrapModal) bootstrapModal.show();
-  },
-  error: () => {
-    Swal.fire("Error", "No se pudo actualizar el estado del ticket", "error");
-    if (modalPagosEl && bootstrapModal) bootstrapModal.show();
+        });
+      } else {
+        // Si canceló, reabrir modal
+        if (modalPagosEl && bootstrapModal) bootstrapModal.show();
+      }
+    });
   }
-});
-  },
-  error: () => {
-    Swal.fire("Error", "No se pudo registrar el abono", "error");
-  }
-      });
-    } else {
-      // Si canceló, reabrir modal
-      if (modalPagosEl && bootstrapModal) bootstrapModal.show();
-    }
-  });
-}
 }

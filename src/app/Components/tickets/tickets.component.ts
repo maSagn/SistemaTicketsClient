@@ -3,6 +3,7 @@ import { TicketDTO } from '../../Interface/TicketDTO';
 import { TicketService } from '../../Service/ticket.service';
 import { DetalleTicketService } from '../../Service/detalle-ticket.service';
 import { switchMap } from 'rxjs';
+import { PagosTicketService } from '../../Service/pagos-ticket.service';
 
 declare var bootstrap: any;
 
@@ -22,7 +23,8 @@ export class TicketsComponent {
 
   constructor(
     private ticketService: TicketService,
-    private detalleTicketService: DetalleTicketService
+    private detalleTicketService: DetalleTicketService,
+    private pagosTicketService: PagosTicketService
   ) { }
 
   ngOnInit(): void {
@@ -64,7 +66,7 @@ export class TicketsComponent {
     if (modalPagos) {
       const modal = new bootstrap.Modal(modalPagos);
       modal.show();
-    } 
+    }
   }
 
   eliminarTicket(idTicket: number) {
@@ -78,7 +80,8 @@ export class TicketsComponent {
     }).then((result: any) => {
       if (result.isConfirmed) {
 
-        this.detalleTicketService.deleteDetallesByTicket(idTicket).pipe(
+        this.pagosTicketService.deletePagosByTicket(idTicket).pipe(
+          switchMap(() => this.detalleTicketService.deleteDetallesByTicket(idTicket)),
           switchMap(() => this.ticketService.eliminarTicket(idTicket))
         ).subscribe({
           next: () => {
