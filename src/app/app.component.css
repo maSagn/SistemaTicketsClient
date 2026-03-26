@@ -111,6 +111,39 @@
     margin-left: 70px;
 }
 
+/* ===== LOGOUT ===== */
+.logout {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    padding: 0 10px;
+}
+
+/* MISMO ESTILO QUE MENU */
+.logout a {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 16px;
+    text-decoration: none;
+    color: #fca5a5; /* rojo suave */
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+.logout a:hover {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ef4444;
+}
+
+/* ICONO */
+.logout .icon {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
 

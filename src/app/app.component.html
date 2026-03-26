@@ -1,4 +1,4 @@
-<div class="layout">
+<div class="layout"  *ngIf="!isLogin()">
 
     <!-- SIDEBAR -->
     <div class="sidebar" [class.collapsed]="isCollapsed">
@@ -28,17 +28,17 @@
                     <span class="text">Tickets</span>
                 </a>
             </li>
-
-            <!-- <li>
-                <a routerLink="/pagos">
-                    <div class="icon">
-                        <i class="bi bi-credit-card"></i>
-                    </div>
-                    <span class="text">Pagos</span>
-                </a>
-            </li> -->
-
         </ul>
+
+        <!-- LOGOUT -->
+        <div class="logout">
+            <a (click)="logout()">
+                <div class="icon">
+                    <i class="bi bi-box-arrow-right"></i>
+                </div>
+                <span class="text">Cerrar sesión</span>
+            </a>
+        </div>
 
     </div>
 
@@ -47,4 +47,9 @@
         <router-outlet></router-outlet>
     </div>
 
+</div>
+
+<!-- SI ES LOGIN -->
+<div *ngIf="isLogin()">
+    <router-outlet></router-outlet>
 </div>

@@ -10,6 +10,7 @@ import { DetalleTicketDTO } from '../../Interface/DetalleTicketDTO';
 import { DetalleTicketService } from '../../Service/detalle-ticket.service';
 import { PagosTicketService } from '../../Service/pagos-ticket.service';
 import { TicketPagoDTO } from '../../Interface/TicketPagoDTO';
+import { AuthService } from '../../Service/auth.service';
 
 // Sweet alert (solo cuando se usa CDN)
 declare var Swal: any;
@@ -33,7 +34,8 @@ export class ProductosComponent {
     private carritoService: CarritoService,
     private ticketService: TicketService,
     private detalleTicketService: DetalleTicketService,
-    private pagoTicketService: PagosTicketService) { }
+    private pagoTicketService: PagosTicketService,
+    public authService: AuthService) { }
 
   ngOnInit(): void {
     this.cargarProductos();

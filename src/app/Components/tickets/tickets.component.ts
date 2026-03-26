@@ -4,6 +4,7 @@ import { TicketService } from '../../Service/ticket.service';
 import { DetalleTicketService } from '../../Service/detalle-ticket.service';
 import { switchMap } from 'rxjs';
 import { PagosTicketService } from '../../Service/pagos-ticket.service';
+import { AuthService } from '../../Service/auth.service';
 
 declare var bootstrap: any;
 
@@ -24,7 +25,8 @@ export class TicketsComponent {
   constructor(
     private ticketService: TicketService,
     private detalleTicketService: DetalleTicketService,
-    private pagosTicketService: PagosTicketService
+    private pagosTicketService: PagosTicketService,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

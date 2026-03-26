@@ -5,7 +5,7 @@
 
     <div class="header-actions">
 
-        <a [routerLink]="['/producto']" class="btn-add">
+        <a [routerLink]="['/producto']" class="btn-add" *ngIf="authService.isAdmin()">
             <i class="bi bi-plus-circle"></i>
             Agregar producto
         </a>
@@ -59,7 +59,7 @@
         <div class="card-header">
             <span class="badge">#{{ producto.idProducto }}</span>
 
-            <div class="actions">
+            <div class="actions" *ngIf="authService.isAdmin()">
                 <a [routerLink]="['/producto', producto.idProducto]" class="icon-btn edit">
                     <i class="bi bi-pen"></i>
                 </a>
