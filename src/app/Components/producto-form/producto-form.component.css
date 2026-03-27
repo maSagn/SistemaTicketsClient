@@ -42,3 +42,19 @@
     padding: 15px 20px;
     border-top: 1px solid #eee;
 }
+
+/* errores */
+.error-msg {
+    color: #e53935;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* validaciones */
+.correct {
+    border: 2px solid #4CAF50 !important;
+}
+
+.error {
+    border: 2px solid #e53935 !important;
+}

@@ -1,4 +1,5 @@
 import { DetalleTicketDTO } from "./DetalleTicketDTO";
+import { UsuarioDTO } from "./UsuarioDTO";
 
 export interface TicketDTO {
     idTicket?: number;
@@ -8,4 +9,6 @@ export interface TicketDTO {
     total: number;
     estatus: string;
     Detalleticket?: DetalleTicketDTO[];
+    Usuario?: UsuarioDTO; // Para crear el ticket
+    usuarioDTO?: UsuarioDTO // Para cargar la lista
 }

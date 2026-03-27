@@ -27,9 +27,9 @@ export class ProductoFormComponent {
   ngOnInit(): void {
     this.productoForm = this.fb.group({
       idProducto: [''],
-      nombre: ['', Validators.required],
-      precioUnitario: ['', Validators.required],
-      descripcion: ['', Validators.required]
+      nombre: ['', [Validators.required, Validators.pattern(/^[^!#$&/]*$/)]],
+      precioUnitario: ['', [Validators.required, Validators.pattern(/^[1-9][0-9]*(\.[0-9]+)?$|^0\.[0-9]*[1-9][0-9]*$/)]],
+      descripcion: ['', [Validators.required, Validators.pattern(/^[^!#$&/]*$/)]]
     });
 
     // Revisar si hay un Id en la ruta:

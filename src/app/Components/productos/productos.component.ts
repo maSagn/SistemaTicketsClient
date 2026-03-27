@@ -77,22 +77,31 @@ export class ProductosComponent {
       cancelButtonText: "Cancelar"
     }).then((result: any) => {
       if (result.isConfirmed) {
-        // Solo eliminar si confirmó
-        this.productoService.delete(idProducto).subscribe(() => {
-          Swal.fire({
-            title: "¡Eliminado!",
-            text: "El producto ha sido eliminado satisfactoriamente.",
-            icon: "success"
-            // timer: 2000
-          });
-          // Recargar lista después de eliminar
-          this.cargarProductos();
-        }, error => {
-          Swal.fire({
-            title: "Error",
-            text: "No se pudo eliminar el producto.",
-            icon: "error"
-          });
+        this.productoService.delete(idProducto).subscribe({
+          next: (res: any) => {
+            // Revisar si el backend dijo que se eliminó
+            if (res.correct) {
+              Swal.fire({
+                title: "¡Eliminado!",
+                text: "El producto ha sido eliminado satisfactoriamente.",
+                icon: "success"
+              });
+              this.cargarProductos();
+            } else {
+              Swal.fire({
+                title: "Error",
+                text: res.errorMessage || "No se pudo eliminar el producto.",
+                icon: "error"
+              });
+            }
+          },
+          error: (err) => {
+            Swal.fire({
+              title: "Error",
+              text: "No se pudo eliminar el producto.",
+              icon: "error"
+            });
+          }
         });
       }
     });
@@ -258,13 +267,17 @@ export class ProductosComponent {
 
     const estatus = abono >= totalValue ? 'PAGADO' : 'PENDIENTE';
 
+    // Obtener Id
+    const idUsuario = this.authService.getUserId();
+
     const ticket: TicketDTO = {
       folio: generarFolio(),
       fechaCreacion: new Date().toISOString(),
       fechaPago: estatus === 'PAGADO' ? new Date().toISOString() : null,
       total: totalValue,
       estatus: estatus,
-      Detalleticket: []
+      Detalleticket: [],
+      Usuario: { idUsuario: idUsuario! }
     };
 
     this.ticketService.registrarTicket(ticket).pipe(
@@ -289,7 +302,8 @@ export class ProductosComponent {
               precioUnitario: item.producto.precioUnitario,
               descripcion: item.producto.descripcion
             }
-          }))
+          })),
+          Usuario: { idUsuario: idUsuario! }
         };
 
         return this.detalleTicketService.agregarDetalle(ticketConDetalles).pipe(

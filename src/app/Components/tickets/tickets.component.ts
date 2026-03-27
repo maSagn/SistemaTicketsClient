@@ -36,8 +36,14 @@ export class TicketsComponent {
   cargarTickets() {
     this.ticketService.getAll().subscribe(
       data => {
-        this.tickets = data;
+        
         console.log("Tickets cargados", data);
+        if (this.authService.isAdmin()) {
+          this.tickets = data;
+        } else if (this.authService.isUser()) {
+          const userId = this.authService.getUserId();
+          this.tickets = data.filter(ticket => ticket.usuarioDTO?.idUsuario === userId);
+        }
       },
       error => {
         console.log("Error al obtener los tickets", error);

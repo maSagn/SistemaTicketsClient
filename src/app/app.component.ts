@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CarritoService } from './Service/carrito.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent {
   isCollapsed = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private carritoService: CarritoService
   ) { }
 
   toggleSidebar() {
@@ -22,6 +24,8 @@ export class AppComponent {
   logout() {
 
     localStorage.removeItem('token');
+    localStorage.removeItem('carrito');
+    this.carritoService.vaciar();
     this.router.navigate(['/login']);
   }
 

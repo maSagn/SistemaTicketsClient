@@ -11,6 +11,7 @@
                 <th>Fecha pago</th>
                 <th>Total</th>
                 <th>Estatus</th>
+                <th>Id Usuario</th>
                 <th>Pagos</th>
             </tr>
         </thead>
@@ -32,11 +33,13 @@
                 <td>{{ ticket.fechaCreacion | date:'medium' }}</td>
                 <td>{{ ticket.fechaPago | date:'medium' }}</td>
                 <td>{{ ticket.total | currency }}</td>
+                
                 <td>
                     <span class="status" [class]="ticket.estatus.toLowerCase()">
                         {{ ticket.estatus }}
                     </span>
                 </td>
+                <td>{{ ticket.usuarioDTO?.idUsuario }}</td>
                 <td>
                     <a (click)="verPagos(ticket.idTicket!)" class="btn btn-success">Pagos</a>
                 </td>
