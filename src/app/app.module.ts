@@ -14,6 +14,7 @@ import { DetalleTicketComponent } from './Components/detalle-ticket/detalle-tick
 import { PagosComponent } from './Components/pagos/pagos.component';
 import { LoginComponent } from './Components/login/login.component';
 import { authInterceptor } from './Service/auth.interceptor';
+import { AccessDeniedComponent } from './Components/access-denied/access-denied.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { authInterceptor } from './Service/auth.interceptor';
     DetalleTicketComponent,
     PagosComponent,
     LoginComponent,
+    AccessDeniedComponent,
 
   ],
   imports: [
