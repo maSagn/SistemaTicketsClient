@@ -1,102 +1,313 @@
-h1 {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #222;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 25px;
-}
-
+/* ===== CONTENEDOR PRINCIPAL ===== */
 .table-container {
-    overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
     padding: 0 10px;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    background-color: #fff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ===== CARD INDIVIDUAL ===== */
+.ticket-card {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.table thead {
-    background: linear-gradient(90deg, #4a90e2, #357ABD);
-    color: white;
+.ticket-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
-.table th,
-.table td {
-    padding: 14px 18px;
-    text-align: center;
-    border-bottom: 1px solid #e2e8f0;
+/* ===== BARRA LATERAL SEGÚN ESTATUS ===== */
+.status-bar {
+    width: 6px;
+    background-color: #f59e0b;
+    /* pendiente por defecto */
+    border-radius: 12px 0 0 12px;
+}
+
+.status-bar.pagado {
+    background-color: #10b981;
+}
+
+.status-bar.pendiente {
+    background-color: #f59e0b;
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+.ticket-card-content {
+    flex: 1;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ===== HEADER ===== */
+.ticket-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-card-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* ===== BODY ===== */
+.ticket-card-body {
+    display: flex;
+    justify-content: space-between;
+    /* Info izquierda, total derecha */
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
     font-size: 0.95rem;
+    color: #334155;
 }
 
-.table tbody tr:hover {
-    background-color: #f0f4ff;
+.ticket-info {
+    display: flex;
+    flex-direction: column;
+    /* Alineamos verticalmente */
+    gap: 6px;
 }
 
-.actions a {
-    margin: 0 4px;
-    padding: 6px 10px;
-    border-radius: 5px;
-    text-decoration: none;
+.ticket-info div {
+    min-width: 120px;
+}
+
+/* ===== TOTAL DESTACADO ===== */
+.ticket-total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2563eb;
+    /* azul llamativo */
+    background-color: rgba(37, 99, 235, 0.1);
+    /* fondo azul suave */
+    padding: 6px 12px;
+    border-radius: 8px;
+    margin-left: auto;
+    /* fuerza que se quede a la derecha */
+}
+
+/* ===== FOOTER BOTONES ===== */
+.ticket-card-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Botones circulares, icon-only, modernos */
+.ticket-card-footer .btn {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
     color: white;
-    display: inline-block;
-    transition: 0.3s;
+    border: none;
 }
 
-.btn-warning {
-    background-color: #f0ad4e;
+.ticket-card-footer .btn-warning {
+    background-color: #fbbf24;
 }
 
-.btn-warning:hover {
-    background-color: #ec971f;
+.ticket-card-footer .btn-warning:hover {
+    background-color: #f59e0b;
+    transform: scale(1.1);
 }
 
-.btn-danger {
-    background-color: #d9534f;
+.ticket-card-footer .btn-danger {
+    background-color: #f87171;
 }
 
-.btn-danger:hover {
-    background-color: #c9302c;
+.ticket-card-footer .btn-danger:hover {
+    background-color: #ef4444;
+    transform: scale(1.1);
 }
 
-.btn-success {
-    background-color: #5cb85c;
-    padding: 7px 15px;
-    border-radius: 6px;
+.ticket-card-footer .btn-success {
+    background-color: #34d399;
 }
 
-.btn-success:hover {
-    background-color: #449d44;
+.ticket-card-footer .btn-success:hover {
+    background-color: #10b981;
+    transform: scale(1.1);
 }
 
-.status {
+/* ===== BADGES DE ESTATUS ===== */
+.status-badge {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: white;
     text-transform: uppercase;
-    font-size: 0.85rem;
 }
 
-.status.pagado {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+.status-badge.pendiente {
+    background-color: #f59e0b;
 }
 
-.status.pendiente {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
+.status-badge.pagado {
+    background-color: #10b981;
 }
 
-.status.cancelado {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .ticket-card-body {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .ticket-card-footer {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+    .ticket-total {
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+
+}
+
+/* ===== BUSCADOR ===== */
+.buscador {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    /* Aseguramos que los elementos se apilen en pantallas pequeñas */
+    gap: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover del contenedor del buscador */
+.buscador:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo para el formulario */
+.buscador form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+}
+
+/* Estilo para el input-group (select + boton) */
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* Estilo para el select (filtro) */
+.buscador .form-select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #e0e7ff;
+    font-size: 1rem;
+    flex-grow: 1;
+    /* El select ocupará el máximo espacio disponible */
+    min-width: 180px;
+    /* Asegura que el select no sea demasiado pequeño */
+    background-color: #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.buscador .form-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Estilo para el botón de búsqueda */
+.buscador .btn-primary {
+    padding: 12px 20px;
+    background-color: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+}
+
+.buscador .btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.buscador .btn-primary i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+/* Estilo para el botón "Borrar filtro" */
+.input-group button {
+    padding: 10px 15px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.input-group button:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
+}
+
+.input-group button i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .buscador form {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .buscador .form-select {
+        width: 100%;
+    }
+
+    .buscador .btn-primary {
+        width: 100%;
+    }
+
+    .input-group button {
+        width: 100%;
+    }
 }

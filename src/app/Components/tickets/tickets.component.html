@@ -1,84 +1,104 @@
 <h1>Tickets</h1>
 
+<div class="buscador">
+    <form [formGroup]="ticketForm" (ngSubmit)="filtrar()">
+        <div class="input-group">
+            <label for="estatus" class="form-label">Filtro:</label>
+            <select class="form-select" formControlName="estatus" id="estatus">
+                <option value="">Selecciona una opción</option>
+                <option value="PENDIENTE">PENDIENTES</option>
+                <option value="PAGADO">PAGADOS</option>
+            </select>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Filtrar
+            </button>
+        </div>
+    </form>
+
+    <!-- Botón "Borrar filtro" -->
+    <div class="input-group">
+        <button class="btn btn-danger" (click)="borrarFiltro()" *ngIf="filtroActivo">
+            Borrar filtro
+        </button>
+    </div>
+</div>
+
 <div class="table-container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Id</th>
-                <th>Folio</th>
-                <th>Fecha creación</th>
-                <th>Fecha pago</th>
-                <th>Total</th>
-                <th>Estatus</th>
-                <th>Id Usuario</th>
-                <th>Pagos</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (ticket of tickets; track ticket.idTicket) {
-            <tr>
-                <td class="actions">
-                    <!-- Ver detalle -->
-                    <a class="btn btn-warning" title="Ver ticket" (click)="verDetalle(ticket.idTicket!)">
-                        <i class="bi bi-ticket-detailed"></i>
-                    </a>
-                    <!-- Eliminar -->
-                    <a (click)="eliminarTicket(ticket.idTicket!)" class="btn btn-danger" title="Eliminar ticket" *ngIf="authService.isAdmin()">
-                        <i class="bi bi-trash3"></i> 
-                    </a>
-                </td>
-                <td>{{ ticket.idTicket }}</td>
-                <td>{{ ticket.folio }}</td>
-                <td>{{ ticket.fechaCreacion | date:'medium' }}</td>
-                <td>{{ ticket.fechaPago | date:'medium' }}</td>
-                <td>{{ ticket.total | currency }}</td>
-                
-                <td>
-                    <span class="status" [class]="ticket.estatus.toLowerCase()">
-                        {{ ticket.estatus }}
-                    </span>
-                </td>
-                <td>{{ ticket.usuarioDTO?.idUsuario }}</td>
-                <td>
-                    <a (click)="verPagos(ticket.idTicket!)" class="btn btn-success">Pagos</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
 
+    <div *ngFor="let ticket of tickets" class="ticket-card">
 
-    <!-- Modal Bootstrap Detalle -->
-    <div class="modal fade" id="detalleTicketModal" tabindex="-1" aria-labelledby="detalleTicketModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detalleTicketModalLabel">Detalle del Ticket</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <!-- Barra lateral según estatus -->
+        <div class="status-bar" [ngClass]="ticket.estatus?.toLowerCase()"></div>
+
+        <div class="ticket-card-content">
+
+            <!-- Header -->
+            <div class="ticket-card-header">
+                <h5>Folio: {{ ticket.folio }} (#{{ ticket.idTicket }})</h5>
+                <span class="status-badge" [ngClass]="ticket.estatus?.toLowerCase()">{{ ticket.estatus }}</span>
+            </div>
+
+            <!-- Body -->
+            <div class="ticket-card-body">
+                <div class="ticket-info">
+                    <div>Fecha creación: {{ ticket.fechaCreacion | date:'medium' }}</div>
+                    <div>Fecha pago: {{ ticket.fechaPago | date:'medium' }}</div>
+                    <div>Id Usuario: {{ ticket.usuarioDTO?.idUsuario }}</div>
                 </div>
-                <div class="modal-body">
-                    <!-- Aquí mostramos los detalles con nuestro componente hijo -->
-                    <app-detalle-ticket [idTicket]="ticketSeleccionadoId"></app-detalle-ticket>
+
+                <!-- Total destacado en la esquina inferior derecha -->
+                <div class="ticket-total">
+                    Total: {{ ticket.total | currency }}
                 </div>
+            </div>
+
+            <!-- Footer botones -->
+            <div class="ticket-card-footer">
+                <button class="btn btn-warning" title="Ver ticket" (click)="verDetalle(ticket.idTicket!)">
+                    <i class="bi bi-ticket-detailed"></i>
+                </button>
+
+                <button *ngIf="authService.isAdmin()" class="btn btn-danger" title="Eliminar ticket"
+                    (click)="eliminarTicket(ticket.idTicket!)">
+                    <i class="bi bi-trash3"></i>
+                </button>
+
+                <button class="btn btn-success" title="Ver pagos" (click)="verPagos(ticket.idTicket!)">
+                    <i class="bi bi-cash-stack"></i>
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detalle -->
+<div class="modal fade" id="detalleTicketModal" tabindex="-1" aria-labelledby="detalleTicketModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalle del Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <app-detalle-ticket [idTicket]="ticketSeleccionadoId"></app-detalle-ticket>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal Bootstrap Pagos -->
-    <div class="modal fade" id="pagosTicketModal" tabindex="-1" aria-labelledby="detalleTpagoicketModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detalleTicketModalLabel">Pagos del Ticket</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Aquí mostramos los detalles con nuestro componente hijo -->
-                    <app-pagos [idTicket]="ticketSeleccionadoId" (ticketLiquidado)="cargarTickets()"></app-pagos>
-                </div>
+<!-- Modal Pagos -->
+<div class="modal fade" id="pagosTicketModal" tabindex="-1" aria-labelledby="detalleTpagoicketModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pagos del Ticket</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <app-pagos [idTicket]="ticketSeleccionadoId" (ticketLiquidado)="cargarTickets()"></app-pagos>
             </div>
         </div>
     </div>

@@ -5,13 +5,14 @@ import { PagosTicketDTO } from '../Interface/PagosTicketDTO';
 import { Result } from '../Interface/Result';
 import { TicketDTO } from '../Interface/TicketDTO';
 import { TicketPagoDTO } from '../Interface/TicketPagoDTO';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PagosTicketService {
 
-  private url = "http://localhost:8081/api/pago";
+  private url = "http://" + environment.ipUrl + ":8081/api/pago";
 
   constructor(private http: HttpClient) { }
 

@@ -4,18 +4,25 @@ import { map, Observable } from 'rxjs';
 import { TicketDTO } from '../Interface/TicketDTO';
 import { Result } from '../Interface/Result';
 import { TicketEstatusDTO } from '../Interface/TicketEstatusDTO';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketService {
 
-  private url = "http://localhost:8081/api/ticket";
+  private url = "http://" + environment.ipUrl + ":8081/api/ticket";
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<TicketDTO[]> {
     return this.http.get<Result<TicketDTO[]>>(this.url).pipe(
+      map(response => response.object)
+    );
+  }
+
+  filtro(ticket: TicketEstatusDTO | null): Observable<TicketDTO[]> {
+    return this.http.post<Result<TicketDTO[]>>(`${this.url}/filtrar`, ticket).pipe(
       map(response => response.object)
     );
   }

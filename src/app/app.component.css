@@ -51,7 +51,7 @@
 .menu a {
     display: flex;
     align-items: center;
-    height: 48px;                 /* 👈 altura fija */
+    height: 48px;
     padding: 0 16px;
     text-decoration: none;
     color: #cbd5f5;
@@ -67,7 +67,7 @@
 
 /* ICON WRAPPER (CLAVE) */
 .icon {
-    width: 40px;                 /* 👈 espacio fijo SIEMPRE */
+    width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -93,7 +93,7 @@
 
 /* IMPORTANTE: NO CAMBIAR PADDING NI JUSTIFY */
 .sidebar.collapsed .menu a {
-    padding: 0 16px;  /* 👈 igual que normal */
+    padding: 0 16px; 
 }
 
 /* ===== CONTENT ===== */
@@ -145,7 +145,7 @@
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
 
     .sidebar {
         transform: translateX(-100%);
@@ -162,5 +162,12 @@
 
     .content.expanded {
         margin-left: 0;
+    }
+} */
+
+@media (max-width: 768px) {
+    .sidebar.mobile-visible {
+        transform: translateX(0);
+        width: 220px;
     }
 }

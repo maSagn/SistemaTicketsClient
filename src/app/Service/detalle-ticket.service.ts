@@ -4,13 +4,14 @@ import { DetalleTicketDTO } from '../Interface/DetalleTicketDTO';
 import { map, Observable } from 'rxjs';
 import { Result } from '../Interface/Result';
 import { TicketDTO } from '../Interface/TicketDTO';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DetalleTicketService {
 
-  private url = "http://localhost:8081/api/detalle";
+  private url = "http://" + environment.ipUrl + ":8081/api/detalle";
 
   constructor(private http: HttpClient) { }
 

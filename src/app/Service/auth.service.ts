@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../Interface/LoginRequest';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private url = "http://localhost:8081/api/auth";
+  private url = "http://" + environment.ipUrl + ":8081/api/auth";
 
   constructor(
     private http: HttpClient,

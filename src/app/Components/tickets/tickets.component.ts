@@ -5,6 +5,9 @@ import { DetalleTicketService } from '../../Service/detalle-ticket.service';
 import { switchMap } from 'rxjs';
 import { PagosTicketService } from '../../Service/pagos-ticket.service';
 import { AuthService } from '../../Service/auth.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TicketEstatusDTO } from '../../Interface/TicketEstatusDTO';
 
 declare var bootstrap: any;
 
@@ -21,22 +24,28 @@ export class TicketsComponent {
 
   tickets: TicketDTO[] = [];
   ticketSeleccionadoId!: number;
+  ticketForm!: FormGroup;
 
   constructor(
     private ticketService: TicketService,
     private detalleTicketService: DetalleTicketService,
     private pagosTicketService: PagosTicketService,
-    public authService: AuthService
+    public authService: AuthService,
+    private fb: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.cargarTickets();
+    this.ticketForm = this.fb.group({
+      estatus: ['']
+    });
   }
 
   cargarTickets() {
     this.ticketService.getAll().subscribe(
       data => {
-        
+
         console.log("Tickets cargados", data);
         if (this.authService.isAdmin()) {
           this.tickets = data;
@@ -112,4 +121,40 @@ export class TicketsComponent {
       }
     });
   }
+
+  filtrar() {
+    const estatusValue = this.ticketForm.value.estatus;
+
+  const ticket: TicketEstatusDTO | null = estatusValue ? { estatus: estatusValue } : {} as TicketEstatusDTO;
+
+    this.ticketService.filtro(ticket).subscribe(
+      data => {
+        console.log("Tickets filtrados cargados", data);
+        const userId = this.authService.getUserId();
+
+        if (this.authService.isAdmin()) {
+          this.tickets = data;
+        } else if (this.authService.isUser()) {
+          const userId = this.authService.getUserId();
+          this.tickets = data.filter(ticket => ticket.usuarioDTO?.idUsuario === userId);
+        }
+
+        //this.tickets = data.filter(ticket => ticket.usuarioDTO?.idUsuario === userId);
+
+      },
+      error => {
+        console.log("Error al obtener los tickets filtrados");
+
+      }
+    )
+  }
+
+  borrarFiltro() {
+    this.ticketForm.reset({ estatus: '' });
+  this.filtrar();
+  }
+
+  get filtroActivo(): boolean {
+  return !!this.ticketForm.get('estatus')?.value;
+}
 }
