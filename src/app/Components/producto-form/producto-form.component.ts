@@ -16,6 +16,7 @@ declare var Swal: any;
 export class ProductoFormComponent {
   productoForm!: FormGroup;
   idProducto!: number;
+  previewImagen: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +30,8 @@ export class ProductoFormComponent {
       idProducto: [''],
       nombre: ['', [Validators.required, Validators.pattern(/^[^!#$&/]*$/)]],
       precioUnitario: ['', [Validators.required, Validators.pattern(/^[1-9][0-9]*(\.[0-9]+)?$|^0\.[0-9]*[1-9][0-9]*$/)]],
-      descripcion: ['', [Validators.required, Validators.pattern(/^[^!#$&/]*$/)]]
+      descripcion: ['', [Validators.required, Validators.pattern(/^[^!#$&/]*$/)]],
+      imagen: ['']
     });
 
     // Revisar si hay un Id en la ruta:
@@ -41,10 +43,45 @@ export class ProductoFormComponent {
           idProducto: producto.idProducto,
           nombre: producto.nombre,
           precioUnitario: producto.precioUnitario,
-          descripcion: producto.descripcion
+          descripcion: producto.descripcion,
+          imagen: producto.imagen
         });
+
+        this.previewImagen = producto.imagen ?? null;
       });
     }
+  }
+
+  //Imagen
+  onFileSelect(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const tiposPermitidos = ['image/png', 'image/jpeg', 'image/jpg'];
+
+    if (!tiposPermitidos.includes(file.type)) {
+      Swal.fire({
+        title: "Error",
+        text: "Solo puedes ingresar imagenes",
+        icon: "error"
+      });
+
+      event.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.previewImagen = reader.result;
+
+      this.productoForm.patchValue({
+        imagen: reader.result
+      });
+    };
+
+    reader.readAsDataURL(file);
   }
 
   mensajeError: string = '';
@@ -56,7 +93,8 @@ export class ProductoFormComponent {
       const producto = {
         nombre: this.productoForm.value.nombre,
         precioUnitario: this.productoForm.value.precioUnitario,
-        descripcion: this.productoForm.value.descripcion
+        descripcion: this.productoForm.value.descripcion,
+        imagen: this.productoForm.value.imagen
       };
 
       if (this.idProducto) { // Editar

@@ -15,6 +15,7 @@
     <thead class="table-dark">
         <tr>
             <th>#</th>
+            <th>Imagen</th>
             <th>Producto</th>
             <th>Cantidad</th>
             <th>Precio Unitario</th>
@@ -24,6 +25,15 @@
     <tbody>
         <tr *ngFor="let detalle of detallesTicket; let i = index">
             <th scope="row">{{ i + 1 }}</th>
+            <td>
+                <img *ngIf="detalle.Producto?.imagen; else placeholder" [src]="detalle.Producto?.imagen" alt="Foto de perfil"
+                    class="profile-img">
+
+                <ng-template #placeholder>
+                    <img src="https://apollobattery.com.au/wp-content/uploads/2022/08/default-product-image.png" alt="Sin imagen"
+                        class="profile-img">
+                </ng-template>
+            </td>
             <td>{{ detalle.Producto?.nombre }}</td>
             <td>{{ detalle.cantidad }}</td>
             <td>{{ detalle.precioUnitario | currency }}</td>
